@@ -16,6 +16,9 @@ const CREATE = "CREATE";
 const SAVING = "SAVING";
 const EDIT = "EDIT";
 const CONFIRM = "CONFIRM";
+const DELETING = "DELETING";
+const ERROR_SAVE = "ERROR_SAVE";
+const ERROR_DELETE = "ERROR_DELETE";
 
 export default function Appointment(props) {
 
@@ -29,10 +32,26 @@ export default function Appointment(props) {
       interviewer
     };
     transition(SAVING);
-    props.bookInterview(props.id, interview).then(() => {
-      transition(SHOW);
-      console.log('I made it here...')
-    });
+    props.bookInterview(props.id, interview)
+      .then(() => {
+        transition(SHOW);
+      })
+      .catch(error => {
+        transition(ERROR_SAVE, true);
+      });
+  }
+
+  function deleteInterview() {
+    transition(DELETING, true);
+
+    props
+      .cancelInterview(props.id)
+      .then(() => {
+        transition(EMPTY);
+      })
+      .catch(error => {
+        transition(ERROR_DELETE, true);
+      });
   }
 
   return (
@@ -45,6 +64,29 @@ export default function Appointment(props) {
           onCancel={() => back()}
           onSave={save}
         />)}
+      {mode === ERROR_SAVE && (
+        <Error message="Could not save appointment." onClose={() => back()} />
+      )}
+      {mode === EDIT && (
+        <Form
+          name={props.interview.student}
+          interviewer={props.interview.interviewer}
+          interviewers={props.interviewers}
+          onCancel={() => back()}
+          onSave={save}
+        />
+      )}
+      {mode === DELETING && <Status message="Deleting" />}
+      {mode === ERROR_DELETE && (
+        <Error message="Could not cancel appointment." onClose={() => back()} />
+      )}
+      {mode === CONFIRM && (
+        <Confirm
+          message="Are you sure you would like to delete?"
+          onCancel={() => back()}
+          onConfirm={deleteInterview}
+        />
+      )}
       {mode === "SAVING" && <Status message="Saving" />}
       {mode === SHOW && props.interview &&
         (<Show
