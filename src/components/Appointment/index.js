@@ -18,6 +18,7 @@ const EDIT = "EDIT";
 const CONFIRM = "CONFIRM";
 
 export default function Appointment(props) {
+
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
@@ -28,20 +29,12 @@ export default function Appointment(props) {
       interviewer
     };
     transition(SAVING);
-    props.bookInterview(props.id, interview).then(() => transition(SHOW))
-      .catch(err => console.log(err));
-
-
+    props.bookInterview(props.id, interview).then(() => {
+      transition(SHOW);
+      console.log('I made it here...')
+    });
   }
 
-  useEffect(() => {
-    if (props.interview && mode === EMPTY) {
-      transition(SHOW);
-    }
-    if (props.interview === null && mode === SHOW) {
-      transition(EMPTY);
-    }
-  }, [props.interview, transition, mode])
   return (
     <article className="appointment">
       <Header time={props.time} />
@@ -49,9 +42,10 @@ export default function Appointment(props) {
       {mode === CREATE && (
         <Form
           interviewers={props.interviewers}
-          onCancel={back}
+          onCancel={() => back()}
           onSave={save}
         />)}
+      {mode === "SAVING" && <Status message="Saving" />}
       {mode === SHOW && props.interview &&
         (<Show
           student={props.interview.student}
@@ -60,7 +54,6 @@ export default function Appointment(props) {
           onDelete={() => transition(CONFIRM)}
         />)
       }
-      {mode === "SAVING" && <Status message="Saving" />}
     </article>
   )
 }
