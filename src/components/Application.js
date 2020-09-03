@@ -14,7 +14,9 @@ export default function Application(props) {
     appointments: {}
   });
 
-  const setDay = day => setState({ ...state, day });
+  const setDay = day => {
+    setState({ ...state, day })
+  };
 
   function bookInterview(id, interview) {
     const appointment = {
@@ -26,10 +28,8 @@ export default function Application(props) {
       [id]: appointment
     };
 
-    if (id && interview) {
-      return axios.put(`/api/appointments/${id}`, { interview })
-        .then((response) => setState({ ...state, appointment }))
-    }
+    return axios.put(`/api/appointments/${id}`, { interview })
+      .then(() => setState({ ...state, appointments }));
   }
 
 
@@ -65,7 +65,6 @@ export default function Application(props) {
   return (
     <main className="layout">
       <section className="sidebar">
-        {/* Replace this with the sidebar elements during the "Project Setup & Familiarity" activity. */}
         <img
           className="sidebar--centered"
           src="images/logo.png"
