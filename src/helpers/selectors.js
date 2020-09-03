@@ -27,6 +27,27 @@ export function getInterview(state, interview) {
   const result = {};
   result.student = interview.student;
   result.interviewer = state.interviewers[interview.interviewer];
-
   return result;
+}
+
+export function getInterviewersForDay(state, day) {
+  if (!state.days) {
+    return [];
+  } else {
+    const filterDays = state.days.filter(days => days.name === day);
+
+    if (filterDays.length === 0) {
+      return filterDays;
+    } else {
+      let interviewers = [];
+      for (const day in state.interviewers) {
+        for (const id of filterDays[0].interviewers) {
+          if (id === Number(day)) {
+            interviewers.push(state.interviewers[`${id}`]);
+          }
+        }
+      }
+      return interviewers;
+    }
+  }
 }
