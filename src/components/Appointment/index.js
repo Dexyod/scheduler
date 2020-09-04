@@ -54,6 +54,15 @@ export default function Appointment(props) {
       });
   }
 
+  useEffect(() => {
+    if (props.interview && mode === EMPTY) {
+      transition(SHOW);
+    }
+    if (props.interview === null && mode === SHOW) {
+      transition(EMPTY);
+    }
+  }, [props.interview, transition, mode]);
+
   return (
     <article className="appointment">
       <Header time={props.time} />
