@@ -7,7 +7,7 @@ import reducer, {
   SET_INTERVIEW
 } from "../reducers/application";
 
-
+require("dotenv").config();
 
 export default function useApplicationData() {
   const [state, dispatch] = useReducer(reducer, {
@@ -32,6 +32,20 @@ export default function useApplicationData() {
       })
     })
       .catch(err => console.log(err));
+
+    //web socket
+    const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
+
+    webSocket.onmessage = function (event) {
+      event = JSON.parse(event.data);
+
+      try {
+        event.type === SET_INTERVIEW && dispatch({ ...event });
+      } catch (error) {
+        console.log({ error, event })
+      }
+
+    };
   }, []);
 
   //set day function
@@ -44,7 +58,7 @@ export default function useApplicationData() {
       .then(() => {
         dispatch({ type: SET_INTERVIEW, id, interview })
       })
-      .catch(err => console.log(err));
+      .catch(err => { throw err });
   }
 
   //Cancelling Interview
@@ -54,8 +68,10 @@ export default function useApplicationData() {
       .then(() => {
         dispatch({ type: SET_INTERVIEW, id });
       })
-      .catch(err => console.log(err));
+      .catch(err => { throw err });
   }
+
+
 
   return { state, setDay, bookInterview, cancelInterview }
 }
