@@ -37,6 +37,7 @@ export default function useApplicationData() {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
 
     webSocket.onmessage = function (event) {
+      // console.log(event.data);
       event = JSON.parse(event.data);
 
       try {
