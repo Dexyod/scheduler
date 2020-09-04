@@ -2,21 +2,6 @@ export const SET_DAY = "SET_DAY";
 export const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
 export const SET_INTERVIEW = "SET_INTERVIEW";
 
-
-//Update spots
-const updateSpots = function (state, decrease) {
-  return state.days.map(day => {
-    if (day.name !== state.day) {
-      return day;
-    }
-
-    return {
-      ...day,
-      spots: decrease ? day.spots-- : day.spots++
-    };
-  });
-};
-
 //reducer
 export default function reducer(state, action) {
   switch (action.type) {
@@ -32,26 +17,33 @@ export default function reducer(state, action) {
       };
     }
     case SET_INTERVIEW: {
-      const appointment = {
-        ...state.appointments[action.id],
-        interview: action.interview ? { ...action.interview } : null
-      };
+      //copy all appointments
+      const newInterview = state["appointments"];
 
-      const appointments = {
-        ...state.appointments,
-        [action.id]: appointment
-      };
+      //get array of days with updated spots
+      const daysArray = state.days.map(day => {
 
-      let days = state.days;
+        for (let appointment of day.appointments) {
+          if (action.id === appointment) {
+            //if interview was added -1 spot or add 1 if deleted
+            if (action.interview && !state.appointments[action.id].interview) {
+              return { ...day, spots: day.spots - 1 };
+            } else if (
+              !action.interview &&
+              state.appointments[action.id].interview
+            ) {
+              return { ...day, spots: day.spots + 1 };
+            }
+          }
+        }
+        return day;
+      });
 
-      if (action.interview && !state.appointments[action.id].interview) {
-        days = updateSpots(state, true);
-      } else if (!action.interview && state.appointments[action.id].interview) {
-        days = updateSpots(state, false);
-      }
+      newInterview[action.id]["interview"] = action.interview;
 
-      return { ...state, ...days, appointments };
+      return { ...state, appointments: newInterview, days: daysArray };
     }
+
     default:
       throw new Error(
         `Tried to reduce with unsupported action type: ${action.type}`
