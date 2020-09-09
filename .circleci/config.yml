@@ -18,9 +18,32 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
       - run: npm test
+  deploy:
+  machine:
+    enabled: true
 
+  working_directory: ~/client
+
+  steps:
+    - add_ssh_keys:
+        fingerprints:
+          - "0d:c7:49:4f:83:af:da:2d:ff:bf:d8:2f:ea:70:04:dc"
+    - checkout
+    - run:
+        name: Push Master to Production
+        command: |
+          git push https://github.com/Dexyod/scheduler.git master:production
 workflows:
   version: 2
-  test:
+  test_and_deploy:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              ignore: production
+      - deploy:
+          filters:
+            branches:
+              ignore: production
+          requires:
+            - build
