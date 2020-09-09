@@ -89,7 +89,7 @@ describe("Form", () => {
 
     fireEvent.click(getByText("Cancel"));
 
-    expect(queryByText(/student name or interviewer cannot be blank/i)).toBeNull();
+    expect(queryByText(/student name or interviewer cannot be blank/i)).not.toBeNull();
 
     expect(getByPlaceholderText("Enter Student Name")).toHaveValue("");
 
