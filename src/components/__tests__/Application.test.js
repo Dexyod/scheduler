@@ -140,7 +140,7 @@ describe("Application", () => {
 
     await waitForElement(() => queryByText(appointment, "Error"));
     expect.stringMatching(/Could not delete appointment/);
-    // expect(getByText(appointment, "Could not delete appointment")).toBeInTheDocument();
+    
     const day = getAllByTestId(container, "day").find(day =>
       queryByText(day, "Monday")
     );

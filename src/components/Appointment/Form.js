@@ -18,8 +18,8 @@ export default function Form(props) {
   }
 
   const validate = () => {
-    if (!name) {
-      setError("Student name cannot be blank");
+    if (!name && !interviewer) {
+      setError("Student name or interviewer cannot be blank");
       return;
     }
     setError("");
