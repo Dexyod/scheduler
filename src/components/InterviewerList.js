@@ -8,7 +8,7 @@ InterviewerList.propTypes = {
   interviewers: PropTypes.array.isRequired
 };
 export default function InterviewerList(props) {
-
+  //get list of interviewers from props
   const interviewers = props.interviewers.map((interviewer) => {
     return (
       <InterviewerListItem

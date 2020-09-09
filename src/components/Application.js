@@ -11,7 +11,7 @@ import {
 import useApplicationData from '../hooks/useApplicationData';
 
 
-export default function Application(props) {
+export default function Application() {
   const {
     state,
     setDay,
@@ -22,8 +22,9 @@ export default function Application(props) {
   if (!state.day) {
     setDay("Monday");
   }
-
+  //grab all appointments for the day
   const appointments = getAppointmentsForDay(state, state.day);
+  //get the list of scheduled appointments
   const schedule = appointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
     const interviewers = getInterviewersForDay(state, state.day);

@@ -4,6 +4,7 @@ export const SET_INTERVIEW = "SET_INTERVIEW";
 
 //reducer
 export default function reducer(state, action) {
+  //create switch case for each action.type
   switch (action.type) {
     case SET_DAY: {
       return { ...state, day: action.day };

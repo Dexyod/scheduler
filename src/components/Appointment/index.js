@@ -25,7 +25,8 @@ export default function Appointment(props) {
   const { mode, transition, back } = useVisualMode(
     props.interview ? SHOW : EMPTY
   );
-
+  
+  //Save interview function
   function save(name, interviewer) {
     const interview = {
       student: name,
@@ -40,7 +41,7 @@ export default function Appointment(props) {
         transition(ERROR_SAVE, true);
       });
   }
-
+  //Delete interview function
   function deleteInterview() {
     transition(DELETING, true);
 
@@ -54,6 +55,7 @@ export default function Appointment(props) {
       });
   }
 
+  //useEffect condition to show EMPTY if props.interview comes back null
   useEffect(() => {
     if (props.interview && mode === EMPTY) {
       transition(SHOW);

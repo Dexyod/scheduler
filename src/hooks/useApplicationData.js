@@ -7,9 +7,11 @@ import reducer, {
   SET_INTERVIEW
 } from "../reducers/application";
 
+//add .env config for websocket
 require("dotenv").config();
 
 export default function useApplicationData() {
+
   const [state, dispatch] = useReducer(reducer, {
     day: "Monday",
     days: [],
@@ -37,7 +39,7 @@ export default function useApplicationData() {
     const webSocket = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
 
     webSocket.onmessage = function (event) {
-      // console.log(event.data);
+      // grab the event.data and parse it
       event = JSON.parse(event.data);
 
       try {
